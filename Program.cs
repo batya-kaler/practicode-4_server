@@ -30,7 +30,7 @@ app.UseCors("AllowAll");
         options.RoutePrefix = string.Empty;
     });
 // }
-app.MapGet("/", () => "Hello World!");
+// app.MapGet("/", () => "Hello World!");
 
 app.MapGet("/items", async (ToDoDbContext db) => await db.Items.ToListAsync());
 

@@ -35,7 +35,7 @@ app.UseCors("AllowAll");
 app.MapGet("/items", async (ToDoDbContext db) => await db.Items.ToListAsync());
 app.MapPost("/", async (ToDoDbContext db,string name) =>
 {
-    var item = new Item { Name = name, IsComplete = false };
+    var item = new Item { Name = name, Iscomplete = false };
     await db.Items.AddAsync(item);
     await db.SaveChangesAsync();
     return await db.Items.ToListAsync();
@@ -54,7 +54,7 @@ app.MapPatch("{id}",async(ToDoDbContext db,int id,bool IsComplete) =>{
    var find=await db.Items.FindAsync(id);
     if(find==null)
     return Results.NotFound();
-   find.IsComplete = IsComplete;
+   find.Iscomplete = IsComplete;
     await db.SaveChangesAsync();
 return Results.Ok();
 });

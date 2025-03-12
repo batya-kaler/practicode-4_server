@@ -84,7 +84,9 @@ var app = builder.Build();
 
 app.UseCors("AllowAll");
 
-// Enable Swagger for both development and production environments
+// Serve static files
+app.UseStaticFiles();
+
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {

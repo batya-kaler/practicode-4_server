@@ -84,7 +84,7 @@ var app = builder.Build();
 
 app.UseCors("AllowAll");
 
-// Serve static files
+// Serve static files from "wwwroot" directory
 app.UseStaticFiles();
 
 app.UseSwagger();

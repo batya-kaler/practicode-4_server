@@ -62,7 +62,6 @@
 // app.Run();
 
 
-
 using TodoApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -98,13 +97,13 @@ app.UseSwaggerUI(c =>
 });
 app.UseCors("AllowAll");
 
-// Remove conflicting route and simplify
 app.MapGet("/", () => "success!!!!!");
 
 app.MapGet("/items", async (ToDoDbContext db) => await db.Items.ToListAsync());
 
-app.MapPost("/", async (ToDoDbContext db, string name) =>
+app.MapPost("/", async (ToDoDbContext db, HttpRequest request) =>
 {
+    var name = request.Query["name"].ToString();
     var item = new Item { Name = name, Iscomplete = false };
     await db.Items.AddAsync(item);
     await db.SaveChangesAsync();
@@ -121,12 +120,13 @@ app.MapDelete("/{id}", async (ToDoDbContext db, int id) =>
     return Results.Ok();
 });
 
-app.MapPatch("/{id}", async (ToDoDbContext db, int id, bool IsComplete) =>
+app.MapPatch("/{id}", async (ToDoDbContext db, int id, HttpRequest request) =>
 {
+    var isComplete = bool.Parse(request.Query["IsComplete"]);
     var find = await db.Items.FindAsync(id);
     if (find == null)
         return Results.NotFound();
-    find.Iscomplete = IsComplete;
+    find.Iscomplete = isComplete;
     await db.SaveChangesAsync();
     return Results.Ok();
 });

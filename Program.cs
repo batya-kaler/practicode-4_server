@@ -3,7 +3,8 @@ using TodoApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models; 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<ToDoDbContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("ToDoDB"), new MySqlServerVersion(new Version(8, 0, 25))));
+builder.Services.AddDbContext<ToDoDbContext>(options => 
+options.UseMySql(builder.Configuration.GetConnectionString("ToDoDB"), new MySqlServerVersion(new Version(8, 0, 25))));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -14,7 +15,6 @@ builder.Services.AddSwaggerGen(c =>
         Description = "API לניהול משימות"
     });
 });
-
 builder.Services.AddCors(options =>
 {
       options.AddPolicy("AllowAll", policy =>

@@ -62,12 +62,19 @@
 // app.Run();
 
 
-using TodoApi;
+
+
+using TodoApi; 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models; 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<ToDoDbContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("ToDoDB"), new MySqlServerVersion(new Version(8, 0, 25))));
+
+// Configure the database context
+builder.Services.AddDbContext<ToDoDbContext>(options => 
+    options.UseMySql(builder.Configuration.GetConnectionString("ToDoDB"), new MySqlServerVersion(new Version(8, 0, 25))));
+
+// Configure Swagger for API documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -79,6 +86,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Configure CORS to allow all origins, methods, and headers
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -90,15 +98,19 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Enable middleware for serving generated Swagger as a JSON endpoint
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ToDo API V1");
 });
+
+// Enable CORS
 app.UseCors("AllowAll");
 
-// Redirect from the root path to /items
-app.MapGet("/", () => Results.Redirect("/items"));
+// Define endpoints
+app.MapGet("/", () => "Welcome to the ToDo API!");
 
 app.MapGet("/items", async (ToDoDbContext db) => await db.Items.ToListAsync());
 
@@ -129,5 +141,6 @@ app.MapPatch("/{id}", async (ToDoDbContext db, int id, bool IsComplete) =>
     await db.SaveChangesAsync();
     return Results.Ok();
 });
+app.MapGet("",()=>"success!!!!!");
 
 app.Run();

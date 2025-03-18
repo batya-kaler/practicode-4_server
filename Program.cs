@@ -62,12 +62,6 @@
 // app.Run();
 
 
-
-
-
-
-
-
 using TodoApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -102,7 +96,12 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ToDo API V1");
 });
 app.UseCors("AllowAll");
+
+// Redirect from the root path to /items
+app.MapGet("/", () => Results.Redirect("/items"));
+
 app.MapGet("/items", async (ToDoDbContext db) => await db.Items.ToListAsync());
+
 app.MapPost("/", async (ToDoDbContext db, string name) =>
 {
     var item = new Item { Name = name, Iscomplete = false };
@@ -110,6 +109,7 @@ app.MapPost("/", async (ToDoDbContext db, string name) =>
     await db.SaveChangesAsync();
     return await db.Items.ToListAsync();
 });
+
 app.MapDelete("{id}", async (ToDoDbContext db, int id) =>
 {
     var item = await db.Items.FindAsync(id);
@@ -119,6 +119,7 @@ app.MapDelete("{id}", async (ToDoDbContext db, int id) =>
     await db.SaveChangesAsync();
     return Results.Ok();
 });
+
 app.MapPatch("{id}", async (ToDoDbContext db, int id, bool IsComplete) =>
 {
     var find = await db.Items.FindAsync(id);
@@ -128,13 +129,11 @@ app.MapPatch("{id}", async (ToDoDbContext db, int id, bool IsComplete) =>
     await db.SaveChangesAsync();
     return Results.Ok();
 });
-app.MapGet("/", () => "success!!!!!");
+
+// Keep the default response for the root path
+app.MapGet("", () => "success!!!!!");
+
 app.Run();
-
-
-
-
-
 
 
 

@@ -120,8 +120,7 @@ app.MapDelete("/{id}", async (ToDoDbContext db, int id) =>
     return Results.Ok();
 });
 
-app.MapPatch("/{id}", async (ToDoDbContext db, int id, bool IsComplete) =>
-{
+app.MapPatch("/{id}", async (ToDoDbContext db, int id, bool IsComplete) =>{
     var find = await db.Items.FindAsync(id);
     if (find == null)
         return Results.NotFound();

@@ -104,9 +104,11 @@ app.MapGet("/items", async (ToDoDbContext db) => await db.Items.ToListAsync());
 
 app.MapPost("/", async (ToDoDbContext db, string name) =>
 {
-    var item = new Item { Name = name, Iscomplete = false };
+    Item item = new Item ();
+    item.Name=name;
+    item.Iscomplete=false;
     await db.Items.AddAsync(item);
-    return db.SaveChangesAsync();
+    return await db.SaveChangesAsync();
 });
 
 app.MapDelete("{id}", async (ToDoDbContext db, int id) =>
